@@ -1,9 +1,16 @@
 from __future__ import annotations
 
 import os
+import sys
 import time
+from pathlib import Path
+
 import requests
 from dotenv import load_dotenv
+
+# Support `python src/bot_telegram.py` by ensuring repo root is importable.
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.core.router import StartupOSRouter
 

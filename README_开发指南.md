@@ -462,3 +462,55 @@ pip install -r requirements.txt
 
 这是你整套 AI 公司最重要的第一块地基。
 
+
+---
+
+## 11. First Iteration 新增能力（本次实现）
+
+### 核心能力
+
+- 结构化日志：`logs/core_flow.jsonl`
+  - 字段：`timestamp/request/response/error`
+  - 启动时自动清理 7 天前日志
+- Idea Parser：支持
+  - 短消息直接解析
+  - `.md` 文件解析为统一 JSON（title/summary/details/requirements/unknowns）
+- Telegram 指令能力：
+  - `/createProject {projectName}`
+  - `/jumpIntoProject {projectName}`
+  - `/brainstormWithProductManager {问题}`
+  - `/brainstormWithArchitect {问题}`
+  - `/brainstormWithEngineer {问题}`
+  - `/answerOpenQuestion {questionId} [answer]`
+  - `/generateCodexPrompt {projectName} [--module xxx] [--doc xxx]`
+- Product Manager Agent 升级：
+  - 输出高级 PRD（vision/scenarios/FR/NFR/boundaries/open questions/suggestions/prototype）
+  - open question 强制带 `[QUESTION_ID: PMQ-xxx]`
+
+### 运行方式
+
+1. CLI：
+
+```bash
+python src/main.py --project demo-project --goal "你的想法或 markdown 文件路径"
+```
+
+2. Telegram Bot：
+
+```bash
+python src/bot_telegram.py
+```
+
+### 当前假设
+
+- 仍使用 DeepSeek 作为 LLM。
+- 当前项目上下文通过 Telegram 本地状态文件 `.telegram_state.json` 维护。
+- `projects/` 目录默认位于仓库根目录。
+
+### 下一迭代 TODO
+
+- 增加 `Architect/Engineer` 对历史项目文件的真实 RAG 检索。
+- 为 `/answerOpenQuestion` 增加更严格的 PRD 内联更新策略（而不仅是附加回答）。
+- 增加 SQLite 作为可选持久层（命令历史、会话、问题状态）。
+- 接入 skill 管理机制（外部 skill 安装与内部 skill 版本管理）。
+- 预留 CrewAI / n8n 迁移适配层（事件总线 + agent interface 协议）。

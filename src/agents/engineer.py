@@ -36,3 +36,18 @@ class EngineerAgent:
         3. 不要假设用户懂 Python 或前端框架。
         """)
         return self.llm.chat(model=self.model, system_prompt=ENGINEER_PROMPT, user_prompt=user_prompt)
+
+    def generate_codex_prompt(self, *, project_name: str, module: str | None = None, doc: str | None = None) -> str:
+        target = "整个项目" if not module and not doc else f"module={module or '-'} doc={doc or '-'}"
+        user_prompt = dedent(f"""
+        为项目 {project_name} 生成可直接粘贴到 Codex/任意 vibe-coding 平台的工程提示词。
+        目标范围：{target}
+
+        输出格式：
+        1) Context
+        2) Task
+        3) Constraints
+        4) Acceptance checks
+        5) Suggested incremental commits
+        """)
+        return self.llm.chat(model=self.model, system_prompt=ENGINEER_PROMPT, user_prompt=user_prompt)
